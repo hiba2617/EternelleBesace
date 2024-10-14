@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -24,10 +26,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(
         message:"Vous devez saisir votre email."
     )]
-    #[Assert\length(
+    #[Assert\Length(
         max:180,
         maxMessage: "L'email ne doit pas dépasser {{ limit }} caractères."
     )]
+    #[Assert\Email(message: "L'email '{{ value }}' n'est pas un email valide.")]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
@@ -46,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(
         message:"Vous devez saisir votre prénom."
     )]
-    #[Assert\length(
+    #[Assert\Length(
         min:5,
         max:10,
         minMessage: "Le champs doit avoir plus de {{ limit }} caracteres",
@@ -58,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(
         message:"Vous devez saisir votre nom."
     )]
-    #[Assert\length(
+    #[Assert\Length(
         min:5,
         max:15,
         minMessage: "Le champs doit avoir plus de {{ limit }} caracteres",
@@ -199,6 +202,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function updateCreatedAt(){
     
         $this->setCreatedAt(new \DateTimeImmutable());
+    }
 
+
+
+    #[ORM\OneToOne(targetEntity: Address::class, cascade: ['persist', 'remove'])]
+
+    #[ORM\JoinColumn(nullable: false)]
+
+    private ? Address $address = null;
+
+    /**
+     * @var Collection<int, Address>
+     */
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'user')]
+    private Collection $addresses;
+
+    public function __construct()
+    {
+        $this->addresses = new ArrayCollection();
+    }
+    
+        // Getter pour l'address
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+    
+        // Setter pour l'address
+    public function setAddress(?Address $address): self
+    {
+        $this->address = $address;
+    
+        return $this;
+
+    }
+
+    /**
+     * @return Collection<int, Address>
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): static
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses->add($address);
+            $address->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): static
+    {
+        if ($this->addresses->removeElement($address)) {
+            // set the owning side to null (unless already changed)
+            if ($address->getUser() === $this) {
+                $address->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

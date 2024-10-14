@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos produits{% endblock %}
+
+{# {% block stylesheets %}
+<link href="{{ asset('/assets/css/footer.css')}}" rel="stylesheet">
+{% endblock %} #}
+
+{% block body %}
+    <div class="row mt-5">
+        {% if product is defined %} 
+            <div class="col-md-4">
+                <img src="{{ asset('uploadImages/' ~ product.imageProduct) }}" alt="{{ product.name }}" class="img-fluid">
+            </div>
+            <div class="col-md-7">
+                <h3>{{ product.name }}</h3>
+                <span class="product-subtitle">{{ product.subtitle }}</span>
+                <span class="product-price">{{ (product.price / 100) | number_format(2, '.', '') }} €</span>
+                <hr>
+                <p>
+                    {{ product.description | raw}}  
+                </p>
+
+{# 1er methode réussie #}
+               <a href="{{path('app_add_cart', {id : product.id})}}" class="btn btn-primary">Ajouter au panier</a> 
+
+{# 2eme methode 
+                <input type="button" class="btn btn-primary" id="btnSubmit" onclick="addCart({{product.id}})" value="Ajouter au panier"> #}
+
+            </div>
+            </div>
+            <div id="toastBox"></div>
+
+        {% else %}
+            <div class="col-12">
+                <p>Aucun produit disponible pour le moment.</p>
+            </div> 
+       {% endif %}  
+     </div> 
+{% endblock %}
+{% block javascripts %}
+    <script src="{{asset('/asset/js/cart.js')}}"></script>
+{% endblock %}

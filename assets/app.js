@@ -18,7 +18,7 @@
 // assets/app.js
 
 // Import Bootstrap (inclut également Popper.js automatiquement)
-import 'bootstrap';
+// import 'bootstrap';
 
 // Import SCSS file
 import './styles/app.scss';

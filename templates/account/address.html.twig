@@ -1,0 +1,62 @@
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Mes adresses {% endblock %}
+
+{% block body %}
+
+    <a href = "{{path('app_account_address_add')}}" class="btn btn-info btn-sm float-end">Ajouter une adresse</a>
+    <h1>Mes adresses</h1>
+    Espace gestion des adresses
+    <br>
+    <a href = "{{path('app_account')}}">Retour</a>
+    <hr>
+    {% if app.user.address| length == 0 %}
+        <p class="text-center">
+            Merci d'ajouter une adresse
+            <a href= "{{path('app_account_address_add')}}" > cliquer ici
+            </a>
+        </p>
+    {% else %}
+        afficher les adresses
+    {% endif %}
+{% endblock %} #}
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes adresses{% endblock %}
+
+{% block body %}
+<a href = "{{path('app_account_address_add')}}" class="btn btn-info btn-sm float-end">Ajouter une adresse</a>
+<h1>Mes adresses</h1>
+    Espace gestion des adresses    <br>
+    <a href = "{{path('app_account')}}">Retour</a>
+    <hr>
+    {% if app.user.address | length == 0 %}
+    <p class="text-center">Vous n'avez pas encore ajouté d'adresse dans votre compte. Veuillez cliquer <a href="{{path('app_account_address_add')}}">cliquer ici</a></p>
+    {% else %}
+        <div class="row">
+
+            {% for address in app.user.address %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"> {{address.name}}</h5>
+                            <p class="card-text">{{address.address}}, <br>
+                                {{address.codePostal}} - {{address.city}} - {{address.country}}  
+                            </p>
+
+                            <a href="">Modifier</a> | <a href="">Supprimer</a>
+
+
+                        </div>
+                    </div>
+                </div>
+
+  {% endfor %} 
+    </div>
+{% endif %} 
+
+
+{% endblock %}
+

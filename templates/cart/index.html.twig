@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block body %}
+<h1 class="mt-5"> Mon panier </h1>
+
+    <hr>
+        {% if cartProducts|length > 0  %}
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">product</th>
+      <th></th>
+      <th scope="col">Quantité</th>
+      <th scope="col">Prix</th>
+      <th scope="col">Total</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+        {% set total = null %}
+  {% for product in cartProducts %}
+    <tr>
+      <th> <img src="{{ asset('uploadImages/' ~ product.product.imageProduct) }}" alt="{{ product.product.name }}" width="30px" height="30px" class="img-fluid"></th>
+      <td>{{product.product.name}}</td>
+      <td>
+    <a href="{{path('app_add_cart', {id: product.product.id})}}" style="color: black; text-decoration:none"><i class="fa-solid fa-plus fa-sm"></i></a>
+      ({{product.quantity}})
+    <a href="{{path('app_decrease_product_cart', {id: product.product.id})}}" style="color: black; text-decoration:none"><i class="fa-solid fa-minus fa-sm"></i></a></td>
+      <td>{{ (product.product.price/100) | number_format(2, '.', '') }}</td>
+      <td>{{((product.product.price * product.quantity)/100) | number_format(2, '.', '') }}</td>
+      <td><a href="{{path('app_delete_product_cart', {id: product.product.id})}}" style="color: black; text-decoration:none"><i class="fa-solid fa-trash"></i></a></td>
+    </tr>
+
+    {% set total = total + (product.product.price * product.quantity) %}
+        {% endfor %}
+
+  </tbody>
+</table>
+<div class="row">
+<div class="col-md-3 offset-md-9">
+<b>Nombre de produits : </b> {{cartProducts|length}} <br>
+    <b> Total de mon panier : </b>{{(total /100) | number_format(2, '.', '') }}€
+        <br>       
+</div>
+<div class="col-md-3 offset-md-9 btn-group">
+<a href="{{path('app_remove_cart')}}" class="btn btn-danger mt-4"> Vider mon panier </a>
+<a href="" class="btn btn-success  mt-4"> Valider mon panier </a>
+</div>
+</div>
+    {% else %}
+        <h3> Votre panier est vide!!</h3>
+{% endif %}
+
+{% endblock %}

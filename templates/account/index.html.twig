@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes addresses {% endblock %}
+
+{% block body %}
+<h1>Compte</h1>
+    <ul>
+    <li><a href="{{path('app_account_update_password')}}"> modification mot de passe</a> </li>
+    <li><a href="{{path('app_account_address')}}"> gestion des adresses</a> </li>
+    </ul>
+
+{% endblock %}
